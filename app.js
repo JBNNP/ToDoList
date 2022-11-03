@@ -3,7 +3,9 @@ const bodyParser = require("body-parser");
 const app = express();
 const date = require(__dirname + "/date.js")
 const mongoose = require("mongoose");
+const _ = require("lodash");
 const { removeAllListeners } = require("nodemon");
+
 
 
 app.use(bodyParser.urlencoded({extended: true,}));
@@ -58,6 +60,16 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/about", (req, res) => {
+  res.render('about');
+});
+
+app.get("/category/:listId", (req, res) => {
+  const requestedList = _.lowerCase(req.params.listId);
+
+
+});
+
 app.post("/", (req, res) => {
   const itemName = req.body.newItem;
   const newItem = new Item({
@@ -79,15 +91,6 @@ app.post("/delete", (req, res)=> {
   });
   res.redirect('/');
 });
-
-
-app.get("/work", (req,res) => {
-  res.render('list', {listTitle: 'Work List', newItem: workItem});
-});
-
-app.get("/about", (req, res) => {
-  res.render('about');
-})
 
 app.listen(3000, () => {
   console.log(`server is running...`);

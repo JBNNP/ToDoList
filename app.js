@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({extended: true,}));
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
-mongoose.connect('mongodb://localhost:27017/todolistDB');
+mongoose.connect('mongodb+srv://admin-john:e6WPqSUJINAQ7Rpp@todolist.xjodj2z.mongodb.net/todolistDB');
 
 const itemsSchema = new mongoose.Schema({
   name: String
@@ -42,7 +42,7 @@ const listSchema = new mongoose.Schema({
 const List = mongoose.model('List', listSchema);
 
 app.get("/", (req, res) => {
-  const day = date.getDate();
+  // const day = date.getDate();
   
   if(Item)
   Item.find({}, (err , itemsFound)=>{
@@ -59,15 +59,19 @@ app.get("/", (req, res) => {
 
       res.redirect("/");
     } else {
-      res.render("list", {listTitle: day, newItem: itemsFound});
+      res.render("list", {listTitle: "Today", newItem: itemsFound});
     }
     
   });
 });
 
+
+
 app.get("/about", (req, res) => {
   res.render('about');
 });
+
+
 
 app.get("/:listId", (req, res) => {
   const requestedList = _.capitalize(req.params.listId);
@@ -89,12 +93,14 @@ app.get("/:listId", (req, res) => {
 //exists
 //first param is the file name of ejs file, 2nd param is an object that contains a data by another 
 //object which is from the database that we got in the results in line 75 (LIst.findOne)
-        res.render("list", {listTitle: results.name, newItem: results.item});
+        res.render("list", {listTitle: results.name, newItem: results.items});
       }
     }
     }
   )
 });
+
+
 
 app.post("/", (req, res) => {
   const itemName = req.body.newItem;
@@ -102,7 +108,6 @@ app.post("/", (req, res) => {
   const newItem = new Item({
     name: itemName
   });
-
 //this will check if you are in the home route it will be saved directly there BUT the title should be "Today" but I used the DATE sorry
 //if not it will look for that listTitle name and push the newItem into the Items then saved it there because it is embedded already in the line 37 which is the (ListSchema)
   if(listName === "Today"){
@@ -114,11 +119,10 @@ app.post("/", (req, res) => {
       foundList.save();
       res.redirect('/' + listName); //this will be passed in line 72 (app.get("/:listId")) and render the data there
     });
-  }
-
-
-  
+  }  
 });
+
+
 
 app.post("/delete", (req, res)=> {
   const id = req.body.checkbox;
@@ -141,9 +145,9 @@ app.post("/delete", (req, res)=> {
       }
     });
   }
-
-  
 });
+
+
 
 app.listen(3000, () => {
   console.log(`server is running...`);

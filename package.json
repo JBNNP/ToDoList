@@ -4,7 +4,8 @@
   "description": "my first EJS",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nf start"
   },
   "author": "johnbriancapte",
   "license": "ISC",
